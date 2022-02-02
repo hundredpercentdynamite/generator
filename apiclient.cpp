@@ -19,36 +19,36 @@ ApiClient::ApiClient()
     this->manager->setCache(this->cache);
 }
 
-//ApiClient::ApiClient(const QString& base)
-//{
-//    this->BASE = base;
-//    this->manager = new QNetworkAccessManager();
-//    this->cache = new QNetworkDiskCache();
-//}
+ApiClient::ApiClient(const QString& base)
+{
+    this->BASE = base;
+    this->manager = new QNetworkAccessManager();
+    this->cache = new QNetworkDiskCache();
+}
 
-//void ApiClient::loadGroups(int filiation) const
-//{
-//    QNetworkRequest request;
-//    request.setUrl(this->BASE + "method/filiation_info.get");
-//    request.setRawHeader("Accept", "application/json");
-//    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-//    request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferCache);
-//    QJsonObject body;
-//    body["filiation_id"] = filiation;
-//    QJsonDocument json(body);
-//    QByteArray raw_body = json.toJson();
-//
-//    QNetworkReply *reply = manager->post(request, raw_body);
-//
-//    QObject::connect(reply, &QNetworkReply::finished, [=](){
-//        if(reply->error() == QNetworkReply::NoError){
-//            QString contents = QString::fromUtf8(reply->readAll());
-//            qDebug() << contents;
-//        }
-//        else{
-//            QString err = reply->errorString();
-//            qDebug() << err;
-//        }
-//        reply->deleteLater();
-//    });
-//}
+void ApiClient::loadGroups(int filiation) const
+{
+    QUrl url(this->BASE + "method/filiation_info.get");
+    QNetworkRequest request(url);
+    request.setRawHeader("Accept", "application/json");
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferCache);
+    QJsonObject body;
+    body["filiation_id"] = filiation;
+    QJsonDocument json(body);
+    QByteArray raw_body = json.toJson();
+
+    QNetworkReply *reply = manager->post(request, raw_body);
+
+    QObject::connect(reply, &QNetworkReply::finished, [=](){
+        if(reply->error() == QNetworkReply::NoError){
+            QString contents = QString::fromUtf8(reply->readAll());
+            qDebug() << contents;
+        }
+        else{
+            QString err = reply->errorString();
+            qDebug() << err;
+        }
+        reply->deleteLater();
+    });
+}

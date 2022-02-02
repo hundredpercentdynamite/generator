@@ -17,7 +17,7 @@ public:
     explicit ApiClient(const QString& base);
     ~ApiClient() = default;
 
-//    void loadGroups(int) const;
+    void loadGroups(int) const;
 
 
     QNetworkAccessManager* manager;

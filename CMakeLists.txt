@@ -51,7 +51,7 @@ else()
 
 endif()
 
-target_link_libraries(generator PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(generator PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network)
 
 set_target_properties(generator PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER gena
