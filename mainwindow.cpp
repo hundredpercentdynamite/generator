@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-//#include "apiclient.h"
 #include <QFileDialog>
 #include <QDir>
 
@@ -15,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->settings = new QSettings("Kleymenov", "ical-gen", this);
     loadSettings();
 
-//    this->api = new ApiClient(this->BASE);
+    this->api = new ApiClient(this->BASE);
 }
 
 MainWindow::~MainWindow()
@@ -87,6 +86,6 @@ void MainWindow::on_saveSettings_clicked()
 
 void MainWindow::on_refreshData_clicked()
 {
-//    this->api->loadGroups(this->FILIAL_ID);
+    this->api->loadGroups(this->FILIAL_ID);
 }
 

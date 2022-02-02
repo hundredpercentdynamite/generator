@@ -38,7 +38,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QSettings* settings;
-//    ApiClient* api;
+    ApiClient* api;
     const int FILIAL_ID = 880;
     QString BASE;
     const QString DEFAULT_API = "https://login.misis.ru/";
