@@ -7,22 +7,28 @@
 #include <QtNetwork/QNetworkDiskCache>
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
+#include <QJsonObject>
 
 
 
-class ApiClient
+class ApiClient: public QObject
 {
+    Q_OBJECT
+signals:
+    void dataLoaded();
+    void error();
 public:
     ApiClient();
     explicit ApiClient(const QString& base);
     ~ApiClient() = default;
 
-    void loadGroups(int) const;
-
+    void loadData(int);
 
     QNetworkAccessManager* manager;
     QNetworkDiskCache* cache;
     QString BASE = "";
+    bool isLoading = false;
+    QJsonObject data;
 };
 
 #endif // APICLIENT_H

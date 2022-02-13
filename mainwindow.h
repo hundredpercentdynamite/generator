@@ -6,6 +6,8 @@
 #include <QSettings>
 #include <QString>
 #include <QDir>
+#include <QMovie>
+#include <QMediaPlayer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,6 +22,7 @@ public:
     ~MainWindow();
     void saveSettings();
     void loadSettings();
+    void setData();
 
 private slots:
     void on_goToSettings_clicked();
@@ -34,7 +37,6 @@ private slots:
     void on_saveSettings_clicked();
 
     void on_refreshData_clicked();
-
 private:
     Ui::MainWindow *ui;
     QSettings* settings;
@@ -43,5 +45,8 @@ private:
     QString BASE;
     const QString DEFAULT_API = "https://login.misis.ru/";
     const QString CURRENT_DIR = QDir::currentPath();
+    QMovie* mainBgImg;
+    QMovie* settingsBgImg;
+    QMediaPlayer* music;
 };
 #endif // MAINWINDOW_H

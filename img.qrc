@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>mainBg.gif</file>
+        <file>settingsBg.gif</file>
+        <file>music.mp3</file>
+    </qresource>
+</RCC>

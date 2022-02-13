@@ -26,7 +26,7 @@ ApiClient::ApiClient(const QString& base)
     this->cache = new QNetworkDiskCache();
 }
 
-void ApiClient::loadGroups(int filiation) const
+void ApiClient::loadData(int filiation)
 {
     QUrl url(this->BASE + "method/filiation_info.get");
     QNetworkRequest request(url);
@@ -41,14 +41,18 @@ void ApiClient::loadGroups(int filiation) const
     QNetworkReply *reply = manager->post(request, raw_body);
 
     QObject::connect(reply, &QNetworkReply::finished, [=](){
+        this->isLoading = true;
         if(reply->error() == QNetworkReply::NoError){
-            QString contents = QString::fromUtf8(reply->readAll());
-            qDebug() << contents;
+            QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
+            this->data = response["response"].toObject();
+            emit dataLoaded();
         }
         else{
-            QString err = reply->errorString();
+            QJsonDocument err = QJsonDocument::fromJson(reply->readAll());
             qDebug() << err;
+            emit error();
         }
         reply->deleteLater();
+        this->isLoading = false;
     });
 }

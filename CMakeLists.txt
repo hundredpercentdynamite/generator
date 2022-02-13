@@ -12,8 +12,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_PREFIX_PATH "/usr/local/opt/qt")
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Network REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Network Multimedia REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network Multimedia REQUIRED)
 
 
 set(PROJECT_SOURCES
@@ -23,6 +23,9 @@ set(PROJECT_SOURCES
         main.cpp
         apiclient.cpp
         apiclient.h
+        media.cpp
+        media.h
+        img.qrc
 )
 
 
@@ -51,7 +54,7 @@ else()
 
 endif()
 
-target_link_libraries(generator PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network)
+target_link_libraries(generator PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Multimedia)
 
 set_target_properties(generator PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER gena

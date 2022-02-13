@@ -1,8 +1,13 @@
 #include "mainwindow.h"
+#include "media.h"
 #include "./ui_mainwindow.h"
 #include <QFileDialog>
 #include <QDir>
-
+#include <QLabel>
+#include <QMovie>
+#include <QMediaPlaylist>
+#include <QMediaPlayer>
+#include <QJsonValue>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -15,6 +20,43 @@ MainWindow::MainWindow(QWidget *parent)
     loadSettings();
 
     this->api = new ApiClient(this->BASE);
+    QObject::connect(this->api, &ApiClient::dataLoaded, this, [=]() {
+        QJsonValue groups = this->api->data.value("groups");
+        QJsonValue teachers = this->api->data.value("teachers");
+        qDebug() << "hello!";
+    });
+
+    QLabel* mainBg = ui->mainBg;
+//    QMovie* mainBgImg = new QMovie(":/mainBg.gif");
+//    this->mainBgImg = mainBgImg;
+//    mainBg->setMovie(mainBgImg);
+//    mainBgImg->start();
+//    mainBg->setScaledContents(true);
+
+    QString mainBgPath(":/mainBg.gif");
+    this->mainBgImg = Media::getBackground(mainBg, mainBgPath);
+
+
+    QLabel* settingsBg = ui->settingsBg;
+//    QMovie* settingsBgImg = new QMovie(":/settingsBg.gif");
+//    this->settingsBgImg = settingsBgImg;
+//    settingsBg->setMovie(settingsBgImg);
+//    settingsBg->setScaledContents(true);
+
+    QString settingsBgPath(":/settingsBg.gif");
+    this->settingsBgImg = Media::getBackground(settingsBg, settingsBgPath);
+
+//    QMediaPlaylist *playlist = new QMediaPlaylist();
+//    playlist->addMedia(QUrl("qrc:/music.mp3"));
+//    playlist->setPlaybackMode(QMediaPlaylist::Loop);
+
+//    QMediaPlayer *music = new QMediaPlayer();
+//    this->music = music;
+//    music->setPlaylist(playlist);
+//    music->play();
+
+    this->music = Media::getMusic();
+    this->music->play();
 }
 
 MainWindow::~MainWindow()
@@ -49,12 +91,16 @@ void MainWindow::on_goToSettings_clicked()
 {
     this->loadSettings();
     ui->stackedWidget->setCurrentIndex(1);
+    this->mainBgImg->stop();
+    this->settingsBgImg->start();
 }
 
 
 void MainWindow::on_goBackButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
+    this->mainBgImg->start();
+    this->settingsBgImg->stop();
 }
 
 
@@ -86,6 +132,6 @@ void MainWindow::on_saveSettings_clicked()
 
 void MainWindow::on_refreshData_clicked()
 {
-    this->api->loadGroups(this->FILIAL_ID);
+    this->api->loadData(this->FILIAL_ID);
 }
 
