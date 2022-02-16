@@ -10,25 +10,28 @@
 #include <QJsonObject>
 
 
+class ApiClient : public QObject {
+Q_OBJECT
 
-class ApiClient: public QObject
-{
-    Q_OBJECT
 signals:
-    void dataLoaded();
-    void error();
+
+  void dataLoaded(QJsonObject&);
+
+  void error(QJsonObject&);
+
 public:
-    ApiClient();
-    explicit ApiClient(const QString& base);
-    ~ApiClient() = default;
+  ApiClient();
 
-    void loadData(int);
+  explicit ApiClient(const QString& base);
 
-    QNetworkAccessManager* manager;
-    QNetworkDiskCache* cache;
-    QString BASE = "";
-    bool isLoading = false;
-    QJsonObject data;
+  ~ApiClient() = default;
+
+  void loadData(int);
+
+  QNetworkAccessManager *manager;
+  QNetworkDiskCache *cache;
+  QString BASE = "";
+  bool isLoading = false;
 };
 
 #endif // APICLIENT_H

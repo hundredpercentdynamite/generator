@@ -16,6 +16,9 @@
   <property name="autoFillBackground">
    <bool>false</bool>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QStackedWidget" name="stackedWidget">
     <property name="geometry">
@@ -25,6 +28,9 @@
       <width>571</width>
       <height>351</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
     </property>
     <property name="currentIndex">
      <number>0</number>
@@ -135,6 +141,9 @@
         <width>581</width>
         <height>381</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #8E8E8E;</string>
       </property>
       <property name="text">
        <string/>
@@ -312,7 +321,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>230</y>
+        <y>250</y>
         <width>100</width>
         <height>32</height>
        </rect>
@@ -336,8 +345,27 @@
         <height>0</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #8E8E8E;</string>
+      </property>
       <property name="text">
        <string/>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="jokesCheckbox">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>230</y>
+        <width>151</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: #fff;</string>
+      </property>
+      <property name="text">
+       <string>Включить приколы</string>
       </property>
      </widget>
      <zorder>settingsBg</zorder>
@@ -351,6 +379,7 @@
      <zorder>horizontalLayoutWidget</zorder>
      <zorder>horizontalLayoutWidget_2</zorder>
      <zorder>saveSettings</zorder>
+     <zorder>jokesCheckbox</zorder>
     </widget>
    </widget>
   </widget>

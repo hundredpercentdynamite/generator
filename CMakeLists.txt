@@ -26,7 +26,7 @@ set(PROJECT_SOURCES
         media.cpp
         media.h
         img.qrc
-)
+        files.h files.cpp)
 
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

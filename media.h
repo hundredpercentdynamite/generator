@@ -8,8 +8,8 @@ class Media
 {
 public:
     Media() = default;
-    static QMovie* getBackground(QLabel*, QString&);
-    static QMediaPlayer* getMusic();
+    static QMovie* getBackground(QLabel*, const QString&);
+    static QMediaPlayer* getMusic(const QString&);
 };
 
 #endif // MEDIA_H
