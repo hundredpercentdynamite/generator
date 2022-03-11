@@ -34,6 +34,8 @@ public:
 
   void checkAndPlayAllMedia();
 
+  void setComboboxOptions(QJsonObject& data);
+
 private slots:
 
   void on_goToSettings_clicked();
@@ -47,6 +49,12 @@ private slots:
   void on_saveSettings_clicked();
 
   void on_refreshData_clicked();
+
+  void on_pushButton_clicked();
+
+  void on_teacher_activated(int index);
+
+  void on_group_activated(int index);
 
 private:
   Ui::MainWindow *ui;

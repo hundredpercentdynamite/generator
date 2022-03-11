@@ -52,3 +52,76 @@ void ApiClient::loadData(int filiation) {
     this->isLoading = false;
   });
 }
+
+//data = {
+//    'group': group_id,
+//    'start_date': date_monday
+//}
+//req = requests.post('https://login.misis.ru/method/schedule.get', data=data)
+
+void ApiClient::loadScheduleByGroup(int groupId, QString& date) {
+  QUrl url(this->BASE + "method/schedule.get");
+  QNetworkRequest request(url);
+  request.setRawHeader("Accept", "application/json");
+  request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+  request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferCache);
+  QJsonObject body;
+  body["group"] = groupId;
+  body["start_date"] = date;
+  QJsonDocument json(body);
+  QByteArray raw_body = json.toJson();
+
+  QNetworkReply *reply = manager->post(request, raw_body);
+  QObject::connect(reply, &QNetworkReply::finished, [=]() {
+    this->isLoading = true;
+    if (reply->error() == QNetworkReply::NoError) {
+      QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
+      QJsonObject data = response.object();
+      qDebug() << data;
+      emit scheduleLoaded(data);
+    } else {
+      QJsonObject err = QJsonDocument::fromJson(reply->readAll()).object();
+      qDebug() << err;
+      emit error(err);
+    }
+    reply->deleteLater();
+    this->isLoading = false;
+  });
+}
+
+
+//data = {
+//    'teacher': teacher_id,
+//    'start_date':date_monday
+//}
+//req = requests.post('https://login.misis.ru/method/schedule.get', data=data)
+void ApiClient::loadScheduleByTeacher(int teacherId, QString& date) {
+  QUrl url(this->BASE + "method/schedule.get");
+  QNetworkRequest request(url);
+  request.setRawHeader("Accept", "application/json");
+  request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+  request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferCache);
+  QJsonObject body;
+  body["teacher"] = teacherId;
+  body["start_date"] = date;
+  QJsonDocument json(body);
+  QByteArray raw_body = json.toJson();
+
+  QNetworkReply *reply = manager->post(request, raw_body);
+  QObject::connect(reply, &QNetworkReply::finished, [=]() {
+    this->isLoading = true;
+    if (reply->error() == QNetworkReply::NoError) {
+      QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
+      QJsonObject data = response.object();
+      qDebug() << response;
+      emit scheduleLoaded(data);
+    } else {
+      QJsonObject err = QJsonDocument::fromJson(reply->readAll()).object();
+      qDebug() << err;
+      emit error(err);
+    }
+    reply->deleteLater();
+    this->isLoading = false;
+  });
+}
+

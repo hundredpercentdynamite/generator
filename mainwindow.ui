@@ -88,7 +88,7 @@
        <string notr="true">Генерировать</string>
       </property>
      </widget>
-     <widget class="QComboBox" name="comboBox_2">
+     <widget class="QComboBox" name="teacher">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -154,7 +154,7 @@
      <zorder>group</zorder>
      <zorder>label_3</zorder>
      <zorder>pushButton</zorder>
-     <zorder>comboBox_2</zorder>
+     <zorder>teacher</zorder>
      <zorder>label_2</zorder>
      <zorder>label</zorder>
     </widget>

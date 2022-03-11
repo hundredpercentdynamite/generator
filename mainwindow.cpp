@@ -7,9 +7,11 @@
 #include <QLabel>
 #include <QMediaPlaylist>
 #include <QJsonValue>
+#include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QFile>
+#include <QDate>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -23,19 +25,24 @@ MainWindow::MainWindow(QWidget *parent)
   this->api = new ApiClient(BASE);
   QObject::connect(this->api, &ApiClient::dataLoaded, this, [=](QJsonObject& data) {
     this->files->saveData(data);
+    this->setComboboxOptions(data);
   });
   if (!this->files->exist()) {
     this->loadDataFromApi();
+  } else {
+    QJsonObject data = this->files->loadData();
+    this->setComboboxOptions(data);
   }
+
+  QObject::connect(this->api, &ApiClient::scheduleLoaded, this, [=](QJsonObject& data) {
+    qDebug() << "schedule:    " << data["schedule"];
+  });
 
   QLabel *mainBg = ui->mainBg;
   this->mainBgImg = Media::getBackground(mainBg, MAIN_BG_PATH);
-
   QLabel *settingsBg = ui->settingsBg;
   this->settingsBgImg = Media::getBackground(settingsBg, SETTINGS_BG_PATH);
-
   this->music = Media::getMusic(MUSIC_PATH);
-
 }
 
 MainWindow::~MainWindow() {
@@ -95,6 +102,33 @@ void MainWindow::checkAndPlayAllMedia() {
   }
 }
 
+void MainWindow::setComboboxOptions(QJsonObject& data) {
+  ui->group->addItem("", 0);
+  ui->teacher->addItem("", 0);
+  QJsonArray groups = data.value("groups").toArray();
+  QJsonArray teachers = data.value("teachers").toArray();
+  QJsonArray::iterator i;
+  for (i = groups.begin(); i != groups.end(); i++) {
+    QJsonObject group = i->toObject();
+    int groupId = group.value("id").toInt();
+    QString groupName = group.value("name").toString();
+    ui->group->addItem(groupName, groupId);
+  }
+  QJsonArray::iterator t;
+  for (t = teachers.begin(); t != teachers.end(); t++) {
+    QJsonObject teacher = t->toObject();
+    int teacherId = teacher.value("id").toInt();
+    QString firstName = teacher.value("first_name").toString();
+    QString lastName = teacher.value("last_name").toString();
+    QString middleName = teacher.value("mid_name").toString();
+    QString resultName = lastName + " " + firstName + " " + middleName;
+    if (lastName.contains("Вакансия")) {
+      continue;
+    }
+    ui->teacher->addItem(resultName, teacherId);
+  }
+}
+
 
 void MainWindow::on_goToSettings_clicked() {
   this->loadSettings();
@@ -134,4 +168,39 @@ void MainWindow::on_saveSettings_clicked() {
 void MainWindow::on_refreshData_clicked() {
   this->loadDataFromApi();
 }
+
+
+void MainWindow::on_group_activated(int _)
+{
+  ui->teacher->setCurrentIndex(0);
+}
+
+void MainWindow::on_teacher_activated(int _)
+{
+  ui->group->setCurrentIndex(0);
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+  int groupId = ui->group->currentData().toInt();
+  int teacherId = ui->teacher->currentData().toInt();
+  QDate currentMonday = QDate::currentDate();
+  currentMonday = currentMonday.addDays(Qt::Monday - currentMonday.dayOfWeek());
+  QString isoCurrentMonday = currentMonday.toString(Qt::ISODate);
+
+  QDate nextMonday = currentMonday.addDays(7);
+  QString isoNextMonday = nextMonday.toString(Qt::ISODate);
+
+  if (groupId) {
+    qDebug() << "groupId:  " << groupId;
+    this->api->loadScheduleByGroup(groupId, isoCurrentMonday);
+    this->api->loadScheduleByGroup(groupId, isoNextMonday);
+  } else if (teacherId) {
+    qDebug() << "teacherId:   " << teacherId;
+    this->api->loadScheduleByTeacher(teacherId, isoCurrentMonday);
+    this->api->loadScheduleByTeacher(teacherId, isoNextMonday);
+  }
+}
+
+
 

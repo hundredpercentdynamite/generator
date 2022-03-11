@@ -16,6 +16,7 @@ Q_OBJECT
 signals:
 
   void dataLoaded(QJsonObject&);
+  void scheduleLoaded(QJsonObject&);
 
   void error(QJsonObject&);
 
@@ -24,9 +25,9 @@ public:
 
   explicit ApiClient(const QString& base);
 
-  ~ApiClient() = default;
-
   void loadData(int);
+  void loadScheduleByTeacher(int, QString&);
+  void loadScheduleByGroup(int, QString&);
 
   QNetworkAccessManager *manager;
   QNetworkDiskCache *cache;
