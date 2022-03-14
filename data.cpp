@@ -10,7 +10,7 @@ void Data::saveData(QJsonObject& data) {
   QJsonDocument jsonDocument(data);
   QByteArray json = jsonDocument.toJson();
   if (!dataFile->open(QIODevice::WriteOnly)) {
-    qWarning("Couldn't open save file.");
+    qWarning("Couldn't open data file.");
     return;
   }
   dataFile->write(json);
@@ -19,7 +19,7 @@ void Data::saveData(QJsonObject& data) {
 
 QJsonObject Data::loadData() {
   if (!dataFile->open(QIODevice::ReadOnly)) {
-    qWarning("Couldn't open save file.");
+    qWarning("Couldn't open data file.");
     QJsonObject emptyObj;
     return emptyObj;
   }

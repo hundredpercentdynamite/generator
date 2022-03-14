@@ -20,13 +20,13 @@ private:
 
   QString eventsDir;
 public:
-  explicit Calendar(QString dir) {
-    this->eventsDir = std::move(dir);
+  explicit Calendar(QString& dir) {
+    setEventsDir(dir);
   };
 
   void generateEvents(QJsonObject&);
 
-  void setEventsDir(QString dir);
+  void setEventsDir(QString& dir);
 };
 
 

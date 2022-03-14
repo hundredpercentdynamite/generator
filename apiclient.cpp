@@ -45,19 +45,13 @@ void ApiClient::loadData(int filiation) {
       emit dataLoaded(data);
     } else {
       QJsonObject err = QJsonDocument::fromJson(reply->readAll()).object();
-      qDebug() << err;
+      qWarning() << err;
       emit error(err);
     }
     reply->deleteLater();
     this->isLoading = false;
   });
 }
-
-//data = {
-//    'group': group_id,
-//    'start_date': date_monday
-//}
-//req = requests.post('https://login.misis.ru/method/schedule.get', data=data)
 
 void ApiClient::loadScheduleByGroup(int groupId, QString& date) {
   QUrl url(this->BASE + "method/schedule.get");
@@ -77,11 +71,10 @@ void ApiClient::loadScheduleByGroup(int groupId, QString& date) {
     if (reply->error() == QNetworkReply::NoError) {
       QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
       QJsonObject data = response.object();
-      qDebug() << data;
       emit scheduleLoaded(data);
     } else {
       QJsonObject err = QJsonDocument::fromJson(reply->readAll()).object();
-      qDebug() << err;
+      qWarning() << err;
       emit error(err);
     }
     reply->deleteLater();
@@ -90,11 +83,6 @@ void ApiClient::loadScheduleByGroup(int groupId, QString& date) {
 }
 
 
-//data = {
-//    'teacher': teacher_id,
-//    'start_date':date_monday
-//}
-//req = requests.post('https://login.misis.ru/method/schedule.get', data=data)
 void ApiClient::loadScheduleByTeacher(int teacherId, QString& date) {
   QUrl url(this->BASE + "method/schedule.get");
   QNetworkRequest request(url);
@@ -113,11 +101,10 @@ void ApiClient::loadScheduleByTeacher(int teacherId, QString& date) {
     if (reply->error() == QNetworkReply::NoError) {
       QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
       QJsonObject data = response.object();
-      qDebug() << response;
       emit scheduleLoaded(data);
     } else {
       QJsonObject err = QJsonDocument::fromJson(reply->readAll()).object();
-      qDebug() << err;
+      qWarning() << err;
       emit error(err);
     }
     reply->deleteLater();

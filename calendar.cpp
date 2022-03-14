@@ -44,8 +44,8 @@ QString getUntil(QDateTime& date) {
   return toIcsDate(dateTime);
 }
 
-void Calendar::setEventsDir(QString dir) {
-  this->eventsDir = std::move(dir);
+void Calendar::setEventsDir(QString& dir) {
+  this->eventsDir = dir;
 }
 
 void Calendar::generateEvents(QJsonObject& data) {
@@ -80,7 +80,7 @@ void Calendar::createEvent(QString& date, QString& start, QString& title, QStrin
   auto *event = new QFile(fileName);
 
   if (!event->open(QIODevice::WriteOnly)) {
-    qWarning("Couldn't open save file.");
+    qWarning("Couldn't open event file.");
     return;
   }
   QString isoStartDate = toIsoDate(date, start);

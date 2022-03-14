@@ -4,12 +4,14 @@
 #include "apiclient.h"
 #include "data.h"
 #include "calendar.h"
+#include "logger.h"
 #include <QMainWindow>
 #include <QSettings>
 #include <QString>
 #include <QDir>
 #include <QMovie>
 #include <QMediaPlayer>
+#include <QtMessageHandler>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -72,6 +74,7 @@ private:
   const QString SETTINGS_BG_PATH = ":/settingsBg.gif";
   const QString MUSIC_PATH = "qrc:/music.mp3";
   QString eventDir;
+  QString logDir;
 
   QMovie *mainBgImg;
   QMovie *settingsBgImg;

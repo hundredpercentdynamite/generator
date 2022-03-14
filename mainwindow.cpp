@@ -6,13 +6,17 @@
 #include <QDir>
 #include <QLabel>
 #include <QMediaPlaylist>
-#include <QJsonValue>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QFile>
 #include <QDate>
+#include <QtMessageHandler>
 
+Logger *logger;
+void messageHandler(QtMsgType type, const QMessageLogContext& ctx, const QString& msg){
+  logger->messageHandler(type, ctx, msg);
+}
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
@@ -20,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent)
 
   this->settings = new QSettings("Kleymenov", "ical-gen", this);
   loadSettings();
+  logger = new Logger(this->logDir);
+  qInstallMessageHandler(messageHandler);
   this->calendar = new Calendar(this->eventDir);
   this->data = new Data(DATA_FILENAME);
   this->api = new ApiClient(BASE);
@@ -35,7 +41,6 @@ MainWindow::MainWindow(QWidget *parent)
   }
 
   QObject::connect(this->api, &ApiClient::scheduleLoaded, this, [=](QJsonObject& jsonData) {
-//    qDebug() << "schedule:    " << jsonData["schedule"];
     this->calendar->generateEvents(jsonData);
   });
 
@@ -59,6 +64,7 @@ void MainWindow::saveSettings() {
   this->calendar->setEventsDir(e_dir);
   QString j_dir = ui->journalDir->text();
   settings->setValue("journal_dir", j_dir);
+  logger->setLogDir(j_dir);
   bool with_jokes = ui->jokesCheckbox->isChecked();
   settings->setValue("with_jokes", with_jokes);
 }
@@ -72,6 +78,7 @@ void MainWindow::loadSettings() {
   this->eventDir = e_dir;
   QString j_dir = settings->value("journal_dir", CURRENT_DIR).toString();
   ui->journalDir->setText(j_dir);
+  this->logDir = j_dir;
   bool with_jokes = settings->value("with_jokes", true).toBool();
   ui->jokesCheckbox->setChecked(with_jokes);
 }
@@ -194,11 +201,9 @@ void MainWindow::on_pushButton_clicked()
   QString isoNextMonday = nextMonday.toString(Qt::ISODate);
 
   if (groupId) {
-    qDebug() << "groupId:  " << groupId;
     this->api->loadScheduleByGroup(groupId, isoCurrentMonday);
     this->api->loadScheduleByGroup(groupId, isoNextMonday);
   } else if (teacherId) {
-    qDebug() << "teacherId:   " << teacherId;
     this->api->loadScheduleByTeacher(teacherId, isoCurrentMonday);
     this->api->loadScheduleByTeacher(teacherId, isoNextMonday);
   }

@@ -30,6 +30,8 @@ set(PROJECT_SOURCES
         data.cpp
         calendar.h
         calendar.cpp
+        logger.h
+        logger.cpp
         )
 
 
