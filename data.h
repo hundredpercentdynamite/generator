@@ -2,18 +2,18 @@
 // Created by Macbook Pro on 16.02.2022.
 //
 
-#ifndef GENERATOR_FILES_H
-#define GENERATOR_FILES_H
+#ifndef GENERATOR_DATA_H
+#define GENERATOR_DATA_H
 
 #include <QFile>
 
-class Files : public QObject {
+class Data : public QObject {
 Q_OBJECT
 
 public:
-  Files() = default;
+  Data() = default;
 
-  explicit Files(const QString& fileName) {
+  explicit Data(const QString& fileName) {
     dataFile = new QFile(fileName);
   }
 
@@ -24,7 +24,7 @@ public:
   bool exist();
 
 private:
-  QFile *dataFile;
+  QFile *dataFile{};
 };
 
-#endif //GENERATOR_FILES_H
+#endif //GENERATOR_DATA_H

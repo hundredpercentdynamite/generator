@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "media.h"
-#include "files.h"
+#include "data.h"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QDir>
@@ -20,22 +20,23 @@ MainWindow::MainWindow(QWidget *parent)
 
   this->settings = new QSettings("Kleymenov", "ical-gen", this);
   loadSettings();
-
-  this->files = new Files(DATA_FILENAME);
+  this->calendar = new Calendar(this->eventDir);
+  this->data = new Data(DATA_FILENAME);
   this->api = new ApiClient(BASE);
-  QObject::connect(this->api, &ApiClient::dataLoaded, this, [=](QJsonObject& data) {
-    this->files->saveData(data);
-    this->setComboboxOptions(data);
+  QObject::connect(this->api, &ApiClient::dataLoaded, this, [=](QJsonObject& jsonData) {
+    this->data->saveData(jsonData);
+    this->setComboboxOptions(jsonData);
   });
-  if (!this->files->exist()) {
+  if (!this->data->exist()) {
     this->loadDataFromApi();
   } else {
-    QJsonObject data = this->files->loadData();
-    this->setComboboxOptions(data);
+    QJsonObject dataFromFile = this->data->loadData();
+    this->setComboboxOptions(dataFromFile);
   }
 
-  QObject::connect(this->api, &ApiClient::scheduleLoaded, this, [=](QJsonObject& data) {
-    qDebug() << "schedule:    " << data["schedule"];
+  QObject::connect(this->api, &ApiClient::scheduleLoaded, this, [=](QJsonObject& jsonData) {
+//    qDebug() << "schedule:    " << jsonData["schedule"];
+    this->calendar->generateEvents(jsonData);
   });
 
   QLabel *mainBg = ui->mainBg;
@@ -55,6 +56,7 @@ void MainWindow::saveSettings() {
   settings->setValue("api_path", apipath);
   QString e_dir = ui->eventDir->text();
   settings->setValue("event_dir", e_dir);
+  this->calendar->setEventsDir(e_dir);
   QString j_dir = ui->journalDir->text();
   settings->setValue("journal_dir", j_dir);
   bool with_jokes = ui->jokesCheckbox->isChecked();
@@ -67,10 +69,10 @@ void MainWindow::loadSettings() {
   this->BASE = apipath;
   QString e_dir = settings->value("event_dir", CURRENT_DIR).toString();
   ui->eventDir->setText(e_dir);
+  this->eventDir = e_dir;
   QString j_dir = settings->value("journal_dir", CURRENT_DIR).toString();
   ui->journalDir->setText(j_dir);
   bool with_jokes = settings->value("with_jokes", true).toBool();
-  qDebug() << "with jokes" << with_jokes;
   ui->jokesCheckbox->setChecked(with_jokes);
 }
 
@@ -102,11 +104,11 @@ void MainWindow::checkAndPlayAllMedia() {
   }
 }
 
-void MainWindow::setComboboxOptions(QJsonObject& data) {
+void MainWindow::setComboboxOptions(QJsonObject& jsonData) {
   ui->group->addItem("", 0);
   ui->teacher->addItem("", 0);
-  QJsonArray groups = data.value("groups").toArray();
-  QJsonArray teachers = data.value("teachers").toArray();
+  QJsonArray groups = jsonData.value("groups").toArray();
+  QJsonArray teachers = jsonData.value("teachers").toArray();
   QJsonArray::iterator i;
   for (i = groups.begin(); i != groups.end(); i++) {
     QJsonObject group = i->toObject();

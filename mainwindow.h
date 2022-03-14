@@ -2,7 +2,8 @@
 #define MAINWINDOW_H
 
 #include "apiclient.h"
-#include "files.h"
+#include "data.h"
+#include "calendar.h"
 #include <QMainWindow>
 #include <QSettings>
 #include <QString>
@@ -60,7 +61,8 @@ private:
   Ui::MainWindow *ui;
   QSettings *settings;
   ApiClient *api;
-  Files *files;
+  Data *data;
+  Calendar *calendar;
   const int FILIAL_ID = 880;
   QString BASE;
   const QString DEFAULT_API = "https://login.misis.ru/";
@@ -69,6 +71,7 @@ private:
   const QString MAIN_BG_PATH = ":/mainBg.gif";
   const QString SETTINGS_BG_PATH = ":/settingsBg.gif";
   const QString MUSIC_PATH = "qrc:/music.mp3";
+  QString eventDir;
 
   QMovie *mainBgImg;
   QMovie *settingsBgImg;

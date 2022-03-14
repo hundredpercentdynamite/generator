@@ -26,8 +26,8 @@ set(PROJECT_SOURCES
         media.cpp
         media.h
         img.qrc
-        files.h
-        files.cpp
+        data.h
+        data.cpp
         calendar.h
         calendar.cpp
         )

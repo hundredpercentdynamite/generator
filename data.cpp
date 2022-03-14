@@ -1,12 +1,12 @@
-#include "files.h"
+#include "data.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 
-bool Files::exist() {
+bool Data::exist() {
   return dataFile->exists();
 }
 
-void Files::saveData(QJsonObject& data) {
+void Data::saveData(QJsonObject& data) {
   QJsonDocument jsonDocument(data);
   QByteArray json = jsonDocument.toJson();
   if (!dataFile->open(QIODevice::WriteOnly)) {
@@ -17,7 +17,7 @@ void Files::saveData(QJsonObject& data) {
   dataFile->close();
 }
 
-QJsonObject Files::loadData() {
+QJsonObject Data::loadData() {
   if (!dataFile->open(QIODevice::ReadOnly)) {
     qWarning("Couldn't open save file.");
     QJsonObject emptyObj;
