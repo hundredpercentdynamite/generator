@@ -17,21 +17,21 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network Multimedia REQUIRE
 
 
 set(PROJECT_SOURCES
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
-        main.cpp
-        apiclient.cpp
-        apiclient.h
-        media.cpp
-        media.h
+        src/main.cpp
+        src/MainWindow/mainwindow.cpp
+        src/MainWindow/mainwindow.h
+        src/MainWindow/mainwindow.ui
+        src/ApiClient/apiclient.cpp
+        src/ApiClient/apiclient.h
+        src/Media/media.cpp
+        src/Media/media.h
+        src/Data/data.h
+        src/Data/data.cpp
+        src/Calendar/calendar.h
+        src/Calendar/calendar.cpp
+        src/Logger/logger.h
+        src/Logger/logger.cpp
         img.qrc
-        data.h
-        data.cpp
-        calendar.h
-        calendar.cpp
-        logger.h
-        logger.cpp
         )
 
 

@@ -19,6 +19,7 @@ void Data::saveData(QJsonObject& data) {
 
 QJsonObject Data::loadData() {
   if (!dataFile->open(QIODevice::ReadOnly)) {
+
     qWarning("Couldn't open data file.");
     QJsonObject emptyObj;
     return emptyObj;

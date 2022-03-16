@@ -3,10 +3,10 @@
 
 #include <QObject>
 #include <QString>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkDiskCache>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
+#include <QNetworkAccessManager>
+#include <QNetworkDiskCache>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 #include <QJsonObject>
 
 
@@ -18,20 +18,22 @@ signals:
   void dataLoaded(QJsonObject&);
   void scheduleLoaded(QJsonObject&);
 
-  void error(QJsonObject&);
-
+  void error(QString&);
+private:
+  QString BASE = "";
+  QNetworkAccessManager *manager;
+  QNetworkDiskCache *cache;
 public:
   ApiClient();
-
-  explicit ApiClient(const QString& base);
-
+  explicit ApiClient(QString& base);
+  ~ApiClient() override {
+    delete this->manager;
+    delete this->cache;
+  };
   void loadData(int);
   void loadScheduleByTeacher(int, QString&);
   void loadScheduleByGroup(int, QString&);
-
-  QNetworkAccessManager *manager;
-  QNetworkDiskCache *cache;
-  QString BASE = "";
+  void setBase(QString&);
   bool isLoading = false;
 };
 

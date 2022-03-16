@@ -39,11 +39,14 @@
      <widget class="QPushButton" name="goToSettings">
       <property name="geometry">
        <rect>
-        <x>470</x>
+        <x>460</x>
         <y>30</y>
         <width>100</width>
         <height>32</height>
        </rect>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::TabFocus</enum>
       </property>
       <property name="text">
        <string notr="true">Настройки</string>
@@ -57,6 +60,9 @@
         <width>211</width>
         <height>32</height>
        </rect>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::TabFocus</enum>
       </property>
      </widget>
      <widget class="QLabel" name="label_3">
@@ -126,6 +132,9 @@
         <height>16</height>
        </rect>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="styleSheet">
        <string notr="true">color: white;</string>
       </property>
@@ -149,6 +158,19 @@
        <string/>
       </property>
      </widget>
+     <widget class="QPushButton" name="helpButton">
+      <property name="geometry">
+       <rect>
+        <x>460</x>
+        <y>60</y>
+        <width>100</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Помощь</string>
+      </property>
+     </widget>
      <zorder>mainBg</zorder>
      <zorder>goToSettings</zorder>
      <zorder>group</zorder>
@@ -157,6 +179,7 @@
      <zorder>teacher</zorder>
      <zorder>label_2</zorder>
      <zorder>label</zorder>
+     <zorder>helpButton</zorder>
     </widget>
     <widget class="QWidget" name="settings">
      <widget class="QPushButton" name="goBackButton">
@@ -167,6 +190,9 @@
         <width>100</width>
         <height>32</height>
        </rect>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::TabFocus</enum>
       </property>
       <property name="text">
        <string notr="true">&lt; Назад</string>
@@ -368,6 +394,19 @@
        <string>Включить приколы</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="defaultButton">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>250</y>
+        <width>121</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>По умолчанию</string>
+      </property>
+     </widget>
      <zorder>settingsBg</zorder>
      <zorder>goBackButton</zorder>
      <zorder>label_4</zorder>
@@ -380,6 +419,7 @@
      <zorder>horizontalLayoutWidget_2</zorder>
      <zorder>saveSettings</zorder>
      <zorder>jokesCheckbox</zorder>
+     <zorder>defaultButton</zorder>
     </widget>
    </widget>
   </widget>

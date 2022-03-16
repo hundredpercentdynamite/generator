@@ -23,6 +23,7 @@ public:
   explicit Calendar(QString& dir) {
     setEventsDir(dir);
   };
+  ~Calendar() override = default;
 
   void generateEvents(QJsonObject&);
 

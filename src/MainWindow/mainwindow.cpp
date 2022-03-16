@@ -1,6 +1,6 @@
 #include "mainwindow.h"
-#include "media.h"
-#include "data.h"
+#include "src/Media/media.h"
+#include "src/Data/data.h"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QDir>
@@ -12,16 +12,18 @@
 #include <QFile>
 #include <QDate>
 #include <QtMessageHandler>
+#include <QLoggingCategory>
 
 Logger *logger;
 void messageHandler(QtMsgType type, const QMessageLogContext& ctx, const QString& msg){
   logger->messageHandler(type, ctx, msg);
 }
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
   ui->stackedWidget->setCurrentIndex(0);
-
+  this->setModals();
   this->settings = new QSettings("Kleymenov", "ical-gen", this);
   loadSettings();
   logger = new Logger(this->logDir);
@@ -29,10 +31,9 @@ MainWindow::MainWindow(QWidget *parent)
   this->calendar = new Calendar(this->eventDir);
   this->data = new Data(DATA_FILENAME);
   this->api = new ApiClient(BASE);
-  QObject::connect(this->api, &ApiClient::dataLoaded, this, [=](QJsonObject& jsonData) {
-    this->data->saveData(jsonData);
-    this->setComboboxOptions(jsonData);
-  });
+  QObject::connect(this->api, &ApiClient::dataLoaded, this, &MainWindow::handle_data_loaded);
+  QObject::connect(this->api, &ApiClient::error, this, &MainWindow::handle_error);
+
   if (!this->data->exist()) {
     this->loadDataFromApi();
   } else {
@@ -40,25 +41,34 @@ MainWindow::MainWindow(QWidget *parent)
     this->setComboboxOptions(dataFromFile);
   }
 
-  QObject::connect(this->api, &ApiClient::scheduleLoaded, this, [=](QJsonObject& jsonData) {
-    this->calendar->generateEvents(jsonData);
-  });
+  QObject::connect(this->api, &ApiClient::scheduleLoaded, this, &MainWindow::handle_schedule_loaded);
 
   QLabel *mainBg = ui->mainBg;
   this->mainBgImg = Media::getBackground(mainBg, MAIN_BG_PATH);
   QLabel *settingsBg = ui->settingsBg;
   this->settingsBgImg = Media::getBackground(settingsBg, SETTINGS_BG_PATH);
   this->music = Media::getMusic(MUSIC_PATH);
+  this->checkAndPlayAllMedia();
 }
 
 MainWindow::~MainWindow() {
   saveSettings();
+  delete settings;
+  delete api;
+  delete data;
+  delete calendar;
+  delete loadingModal;
+  delete errorModal;
+  delete mainBgImg;
+  delete settingsBgImg;
+  delete music;
   delete ui;
 }
 
 void MainWindow::saveSettings() {
   QString apipath = ui->apiPath->text();
   settings->setValue("api_path", apipath);
+  this->api->setBase(apipath);
   QString e_dir = ui->eventDir->text();
   settings->setValue("event_dir", e_dir);
   this->calendar->setEventsDir(e_dir);
@@ -79,11 +89,19 @@ void MainWindow::loadSettings() {
   QString j_dir = settings->value("journal_dir", CURRENT_DIR).toString();
   ui->journalDir->setText(j_dir);
   this->logDir = j_dir;
-  bool with_jokes = settings->value("with_jokes", true).toBool();
+  bool with_jokes = settings->value("with_jokes", false).toBool();
   ui->jokesCheckbox->setChecked(with_jokes);
 }
 
+void MainWindow::loadDefaultSettings() {
+  ui->apiPath->setText(DEFAULT_API);
+  ui->eventDir->setText(CURRENT_DIR);
+  ui->journalDir->setText(CURRENT_DIR);
+  ui->jokesCheckbox->setChecked(false);
+}
+
 void MainWindow::loadDataFromApi() {
+  this->loadingModal->show();
   this->api->loadData(FILIAL_ID);
 }
 
@@ -138,6 +156,20 @@ void MainWindow::setComboboxOptions(QJsonObject& jsonData) {
   }
 }
 
+void MainWindow::setModals() {
+  this->loadingModal = new QMessageBox();
+  this->loadingModal->setText("Загрузка");
+  this->loadingModal->setWindowModality(Qt::WindowModality::WindowModal);
+  this->loadingModal->setIcon(QMessageBox::Information);
+  this->errorModal = new QErrorMessage(this);
+
+  this->helpModal = new QMessageBox();
+  this->helpModal->setText("Помощь");
+  this->helpModal->setInformativeText("Данное приложение генерирует файлы .ics по расписанию на текущий семестр для выбранной группы или преподавателя НИТУ МИСиС");
+  this->helpModal->setDetailedText("1. Выберите группу или преподавателя\n2.Нажмите кнопку \"Генерировать\"\n\nВ настройках можно обновить данные о группах и преподавателях.");
+  this->helpModal->setWindowModality(Qt::WindowModality::WindowModal);
+  this->helpModal->setIcon(QMessageBox::Information);
+}
 
 void MainWindow::on_goToSettings_clicked() {
   this->loadSettings();
@@ -173,6 +205,10 @@ void MainWindow::on_saveSettings_clicked() {
   this->checkAndPlayAllMedia();
 }
 
+void MainWindow::on_defaultButton_clicked()
+{
+  this->loadDefaultSettings();
+}
 
 void MainWindow::on_refreshData_clicked() {
   this->loadDataFromApi();
@@ -191,6 +227,7 @@ void MainWindow::on_teacher_activated(int _)
 
 void MainWindow::on_pushButton_clicked()
 {
+  this->loadingModal->show();
   int groupId = ui->group->currentData().toInt();
   int teacherId = ui->teacher->currentData().toInt();
   QDate currentMonday = QDate::currentDate();
@@ -209,5 +246,25 @@ void MainWindow::on_pushButton_clicked()
   }
 }
 
+void MainWindow::handle_data_loaded(QJsonObject& jsonData) {
+  this->data->saveData(jsonData);
+  this->setComboboxOptions(jsonData);
+  this->loadingModal->hide();
+}
 
+void MainWindow::handle_schedule_loaded(QJsonObject& jsonData) {
+  this->calendar->generateEvents(jsonData);
+  this->loadingModal->hide();
+}
+
+void MainWindow::handle_error(QString& error) {
+  qWarning() << error;
+  this->errorModal->showMessage("Ошибка! Не удалось загрузить данные, смотрите подробности в журнале.");
+}
+
+
+void MainWindow::on_helpButton_clicked()
+{
+  this->helpModal->exec();
+}
 

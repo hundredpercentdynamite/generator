@@ -5,10 +5,10 @@
 #include <QByteArray>
 #include <QObject>
 #include <QString>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkDiskCache>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
+#include <QNetworkAccessManager>
+#include <QNetworkDiskCache>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 ApiClient::ApiClient() {
   this->BASE = "https://login.misis.ru";
@@ -18,10 +18,14 @@ ApiClient::ApiClient() {
   this->manager->setCache(this->cache);
 }
 
-ApiClient::ApiClient(const QString& base) {
-  this->BASE = base;
+ApiClient::ApiClient(QString& base) {
+  this->setBase(base);
   this->manager = new QNetworkAccessManager();
   this->cache = new QNetworkDiskCache();
+}
+
+void ApiClient::setBase(QString& base) {
+  this->BASE = base;
 }
 
 void ApiClient::loadData(int filiation) {
@@ -43,9 +47,9 @@ void ApiClient::loadData(int filiation) {
       QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
       QJsonObject data = response["response"].toObject();
       emit dataLoaded(data);
-    } else {
-      QJsonObject err = QJsonDocument::fromJson(reply->readAll()).object();
-      qWarning() << err;
+    }
+    else {
+      QString err = reply->errorString();
       emit error(err);
     }
     reply->deleteLater();
@@ -73,8 +77,7 @@ void ApiClient::loadScheduleByGroup(int groupId, QString& date) {
       QJsonObject data = response.object();
       emit scheduleLoaded(data);
     } else {
-      QJsonObject err = QJsonDocument::fromJson(reply->readAll()).object();
-      qWarning() << err;
+      QString err = reply->errorString();
       emit error(err);
     }
     reply->deleteLater();
@@ -103,8 +106,7 @@ void ApiClient::loadScheduleByTeacher(int teacherId, QString& date) {
       QJsonObject data = response.object();
       emit scheduleLoaded(data);
     } else {
-      QJsonObject err = QJsonDocument::fromJson(reply->readAll()).object();
-      qWarning() << err;
+      QString err = reply->errorString();
       emit error(err);
     }
     reply->deleteLater();

@@ -17,6 +17,10 @@ public:
     setLogDir(dir);
     setLogFile();
   };
+  ~Logger() override {
+    this->logFile->close();
+    delete this->logFile;
+  }
   void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
   void setLogDir(QString& dir);
   void setLogFile();

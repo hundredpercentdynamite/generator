@@ -26,7 +26,7 @@ void Logger::setLogDir(QString& dir) {
 }
 
 void Logger::setLogFile() {
-  QString timestamp = QDateTime::currentDateTime().toLocalTime().toString("yyyy-MM-dd_hh:mm:ss");
+  QString timestamp = QDateTime::currentDateTime().toLocalTime().toString("yyyy-MM-dd");
   QString fileName = logName + timestamp + ".log";
   QString path = this->logDir.length() > 0 ? this->logDir + "/" + fileName : fileName;
   this->logFile = new QFile(path);

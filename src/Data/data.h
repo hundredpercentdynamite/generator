@@ -9,22 +9,27 @@
 
 class Data : public QObject {
 Q_OBJECT
+private:
+  QFile *dataFile{};
 
 public:
   Data() = default;
 
   explicit Data(const QString& fileName) {
     dataFile = new QFile(fileName);
-  }
+  };
+  ~Data() override {
+    if (this->dataFile->isOpen()) {
+      this->dataFile->close();
+    }
+    delete this->dataFile;
+  };
 
   void saveData(QJsonObject& data);
 
   QJsonObject loadData();
 
   bool exist();
-
-private:
-  QFile *dataFile{};
 };
 
 #endif //GENERATOR_DATA_H
