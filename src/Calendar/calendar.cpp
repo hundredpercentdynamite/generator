@@ -114,7 +114,6 @@ void Calendar::createEvent(QString& date, QString& start, QString& title, QStrin
   outputStream << "BEGIN:STANDARD" << '\n';
   outputStream << "DTSTART:20010101T000000" << '\n';
   outputStream << "TZNAME:GMT+3" << '\n';
-  outputStream << "TZOFFSETTO:+023017" << '\n';
   outputStream << "END:STANDARD" << '\n';
   outputStream << "END:VTIMEZONE" << '\n';
   outputStream << "BEGIN:VEVENT" << '\n';

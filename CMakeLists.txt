@@ -46,18 +46,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 
 else()
-    if(ANDROID)
-        add_library(generator SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(generator
-            ${PROJECT_SOURCES}
-        )
-    endif()
-
+    add_executable(generator
+        ${PROJECT_SOURCES}
+    )
 endif()
 
 target_link_libraries(generator PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Multimedia)
@@ -71,3 +62,5 @@ set_target_properties(generator PROPERTIES
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(generator)
 endif()
+
+install(TARGETS generator DESTINATION ~/generator)
