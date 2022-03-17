@@ -1,7 +1,3 @@
-//
-// Created by Macbook Pro on 28.02.2022.
-//
-
 #ifndef GENERATOR_CALENDAR_H
 #define GENERATOR_CALENDAR_H
 
@@ -14,7 +10,7 @@ Q_OBJECT
 private:
   const std::vector<QString> bellList = std::vector<QString>({"bell_1", "bell_2", "bell_3", "bell_4", "bell_5"});
   const std::vector<QString> dayList = std::vector<QString>({"day_1", "day_2", "day_3", "day_4", "day_5", "day_6"});
-  const std::vector<QString> mapDayToName = std::vector<QString>({"SU", "MO", "TU", "WE", "TH", "FR", "SA", "SU" });
+  const std::vector<QString> mapDayToName = std::vector<QString>({"SU", "MO", "TU", "WE", "TH", "FR", "SA", "SU"});
 
   void createEvent(QString& date, QString& start, QString& title, QString& description);
 
@@ -23,10 +19,18 @@ public:
   explicit Calendar(QString& dir) {
     setEventsDir(dir);
   };
+
   ~Calendar() override = default;
 
+  /**
+   * Генерирует файлы событий по объекту расписания
+   */
   void generateEvents(QJsonObject&);
 
+  /**
+   * Устанавливает директорию для сохранения событий
+   * @param dir - путь до папки
+   */
   void setEventsDir(QString& dir);
 };
 

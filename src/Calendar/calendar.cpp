@@ -1,6 +1,3 @@
-//
-// Created by Macbook Pro on 08.03.2022.
-//
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonValue>
@@ -8,11 +5,15 @@
 #include <QFile>
 #include <QUuid>
 #include <QDateTime>
-#include <utility>
 #include <QDesktopServices>
 #include "calendar.h"
 #include "vector"
 
+/**
+ * Переводит QDateTime в формат, пригодный для .ics
+ * @param date строка вида YYYY-MM-ddThh:mm:ss
+ * @return строка вида YYYYMMddThhmmss
+ */
 QString toIcsDate(QDateTime& date) {
   QStringList dateAndTime = date.toString(Qt::ISODate).split("T");
   QStringList dateList = dateAndTime[0].split("-");
@@ -22,14 +23,24 @@ QString toIcsDate(QDateTime& date) {
   return ics;
 }
 
+/**
+ * Форматирует строковые дату и время в формат iso 8061
+ * @param date строка вида dd.MM.YY
+ * @param time строка вида hh:mm
+ * @return строка вида YYYY-MM-ddThh:mm:00
+ */
 QString toIsoDate(QString& date, QString& time) {
   QStringList startDate = date.split(".");
-  QStringList timeList = time.split(":");
   QString iso = "20" + startDate[2] + "-" + startDate[1] + "-" + startDate[0] + "T" + time + ":" + "00";
 
   return iso;
 }
 
+/**
+ * Вычисляет дату окончания повторения событий
+ * @param date текущая дата
+ * @return дата конца семестра 31.12 или 15.06
+ */
 QString getUntil(QDateTime& date) {
   QDate qDate = date.date();
   int month = qDate.month();

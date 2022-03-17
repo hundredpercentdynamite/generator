@@ -50,22 +50,50 @@ public:
 
   ~MainWindow();
 
+  /**
+   * Сохраняет настройки приложения
+   */
   void saveSettings();
 
+  /**
+   * Загружает настройки приложения
+   */
   void loadSettings();
 
+  /**
+   * Устанавливает настройки приложения по умолчанию
+   */
   void loadDefaultSettings();
 
+  /**
+   * Загружает данные о группах и преподавателях
+   */
   void loadDataFromApi();
 
+  /**
+   * Воспроизведение всех медиа-файлов
+   */
   void playAllMedia();
 
+  /**
+   * Остановка всех медиа-файлов
+   */
   void stopAllMedia();
 
+  /**
+   * Проверяет, включена ли настройка проигрывания медиа-файлов и включает/выключает их воспроизведение
+   */
   void checkAndPlayAllMedia();
 
+  /**
+   * Устанавливает в комбобоксы информацию о группах и преподавателях
+   * @param jsonData
+   */
   void setComboboxOptions(QJsonObject& jsonData);
 
+  /**
+   * Устанавливает параметры модальных окон
+   */
   void setModals();
 
 private slots:
@@ -90,10 +118,22 @@ private slots:
 
   void on_group_activated(int index);
 
+  /**
+   * Обработчик загрузки данных о группах и преподавателях
+   * @param jsonData
+   */
   void handle_data_loaded(QJsonObject& jsonData);
 
+  /**
+   * Обработчик загрузки расписания
+   * @param jsonData
+   */
   void handle_schedule_loaded(QJsonObject& jsonData);
 
+  /**
+   * Обработчки ошибки загрузки данных из api
+   * @param error
+   */
   void handle_error(QString& error);
 
   void on_helpButton_clicked();

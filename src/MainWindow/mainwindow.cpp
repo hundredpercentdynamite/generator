@@ -15,7 +15,8 @@
 #include <QLoggingCategory>
 
 Logger *logger;
-void messageHandler(QtMsgType type, const QMessageLogContext& ctx, const QString& msg){
+
+void messageHandler(QtMsgType type, const QMessageLogContext& ctx, const QString& msg) {
   logger->messageHandler(type, ctx, msg);
 }
 
@@ -165,8 +166,10 @@ void MainWindow::setModals() {
 
   this->helpModal = new QMessageBox();
   this->helpModal->setText("Помощь");
-  this->helpModal->setInformativeText("Данное приложение генерирует файлы .ics по расписанию на текущий семестр для выбранной группы или преподавателя НИТУ МИСиС");
-  this->helpModal->setDetailedText("1. Выберите группу или преподавателя\n2.Нажмите кнопку \"Генерировать\"\n\nВ настройках можно обновить данные о группах и преподавателях.");
+  this->helpModal->setInformativeText(
+      "Данное приложение генерирует файлы .ics по расписанию на текущий семестр для выбранной группы или преподавателя НИТУ МИСиС");
+  this->helpModal->setDetailedText(
+      "1. Выберите группу или преподавателя\n2.Нажмите кнопку \"Генерировать\"\n\nВ настройках можно обновить данные о группах и преподавателях.");
   this->helpModal->setWindowModality(Qt::WindowModality::WindowModal);
   this->helpModal->setIcon(QMessageBox::Information);
 }
@@ -205,8 +208,7 @@ void MainWindow::on_saveSettings_clicked() {
   this->checkAndPlayAllMedia();
 }
 
-void MainWindow::on_defaultButton_clicked()
-{
+void MainWindow::on_defaultButton_clicked() {
   this->loadDefaultSettings();
 }
 
@@ -215,18 +217,15 @@ void MainWindow::on_refreshData_clicked() {
 }
 
 
-void MainWindow::on_group_activated(int _)
-{
+void MainWindow::on_group_activated(int _) {
   ui->teacher->setCurrentIndex(0);
 }
 
-void MainWindow::on_teacher_activated(int _)
-{
+void MainWindow::on_teacher_activated(int _) {
   ui->group->setCurrentIndex(0);
 }
 
-void MainWindow::on_pushButton_clicked()
-{
+void MainWindow::on_pushButton_clicked() {
   this->loadingModal->show();
   int groupId = ui->group->currentData().toInt();
   int teacherId = ui->teacher->currentData().toInt();
@@ -263,8 +262,6 @@ void MainWindow::handle_error(QString& error) {
 }
 
 
-void MainWindow::on_helpButton_clicked()
-{
+void MainWindow::on_helpButton_clicked() {
   this->helpModal->exec();
 }
-
