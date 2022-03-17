@@ -101,7 +101,6 @@ void Calendar::createEvent(QString& date, QString& start, QString& title, QStrin
   outputStream << "BEGIN:VTIMEZONE" << '\n';
   outputStream << "TZID:Europe/Moscow" << '\n';
   outputStream << "BEGIN:STANDARD" << '\n';
-  outputStream << "TZOFFSETFROM:+023017" << '\n';
   outputStream << "DTSTART:20010101T000000" << '\n';
   outputStream << "TZNAME:GMT+3" << '\n';
   outputStream << "TZOFFSETTO:+023017" << '\n';
@@ -110,7 +109,6 @@ void Calendar::createEvent(QString& date, QString& start, QString& title, QStrin
   outputStream << "BEGIN:VEVENT" << '\n';
   outputStream << "TRANSP:OPAQUE" << '\n';
   outputStream << "DTEND;TZID=Europe/Moscow:" << icsEndDate << '\n';
-  outputStream << "X-APPLE-TRAVEL-ADVISORY-BEHAVIOR:AUTOMATIC" << '\n';
   outputStream << "UID:" << uuid.toUpper() << '\n';
   outputStream << "DTSTAMP:" << icsTimestamp << '\n';
   outputStream << "LOCATION:" << description << '\n';
