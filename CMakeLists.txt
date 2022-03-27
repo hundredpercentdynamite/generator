@@ -63,4 +63,4 @@ if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(generator)
 endif()
 
-install(TARGETS generator DESTINATION ~/generator)
+install(TARGETS generator DESTINATION ${INSTALL_PREFIX})
