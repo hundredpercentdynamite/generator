@@ -32,7 +32,7 @@ private:
   QString BASE;
   const QString DEFAULT_API = "https://login.misis.ru/";
   const QString CURRENT_DIR = QDir::currentPath();
-  const QString DATA_FILENAME = "data.json";
+  const QString DATA_FILENAME = CURRENT_DIR + "/data.json";
   const QString MAIN_BG_PATH = ":/static/mainBg.gif";
   const QString SETTINGS_BG_PATH = ":/static/settingsBg.gif";
   const QString MUSIC_PATH = "qrc:/static/music.mp3";

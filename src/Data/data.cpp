@@ -27,6 +27,6 @@ QJsonObject Data::loadData() {
 
   QByteArray data = dataFile->readAll();
   QJsonDocument jsonDocument(QJsonDocument::fromJson(data));
-
+  dataFile->close();
   return jsonDocument.object();
 }
