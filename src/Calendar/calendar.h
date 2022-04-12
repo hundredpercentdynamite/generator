@@ -25,7 +25,7 @@ public:
   /**
    * Генерирует файлы событий по объекту расписания
    */
-  void generateEvents(QJsonObject&);
+  void generateEvents(QJsonObject& data);
 
   /**
    * Устанавливает директорию для сохранения событий

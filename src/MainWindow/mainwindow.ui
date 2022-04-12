@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>ICS-generator</string>
+   <string>Generator</string>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
@@ -33,7 +33,7 @@
      <string notr="true"/>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="main">
      <widget class="QPushButton" name="goToSettings">
@@ -407,6 +407,22 @@
        <string>По умолчанию</string>
       </property>
      </widget>
+     <widget class="QCheckBox" name="askDirForSave">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>130</y>
+        <width>101</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: white;</string>
+      </property>
+      <property name="text">
+       <string>Спрашивать</string>
+      </property>
+     </widget>
      <zorder>settingsBg</zorder>
      <zorder>goBackButton</zorder>
      <zorder>label_4</zorder>
@@ -420,6 +436,7 @@
      <zorder>saveSettings</zorder>
      <zorder>jokesCheckbox</zorder>
      <zorder>defaultButton</zorder>
+     <zorder>askDirForSave</zorder>
     </widget>
    </widget>
   </widget>
@@ -432,14 +449,19 @@
      <height>24</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuICS_gen">
+   <widget class="QMenu" name="menuGenerator">
     <property name="title">
-     <string>ICS-gen</string>
+     <string>Generator</string>
     </property>
    </widget>
-   <addaction name="menuICS_gen"/>
+   <addaction name="menuGenerator"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionGenerator">
+   <property name="text">
+    <string>Generator</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

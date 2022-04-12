@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
   ui->setupUi(this);
   ui->stackedWidget->setCurrentIndex(0);
   this->setModals();
-  this->settings = new QSettings("Kleymenov", "ical-gen", this);
+  this->settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "MISIS", "Generator", this);
   loadSettings();
   logger = new Logger(this->logDir);
   qInstallMessageHandler(messageHandler);
@@ -78,6 +78,8 @@ void MainWindow::saveSettings() {
   logger->setLogDir(j_dir);
   bool with_jokes = ui->jokesCheckbox->isChecked();
   settings->setValue("with_jokes", with_jokes);
+  bool ask_dir = ui->askDirForSave->isChecked();
+  settings->setValue("ask_dir_for_save", ask_dir);
 }
 
 void MainWindow::loadSettings() {
@@ -92,6 +94,8 @@ void MainWindow::loadSettings() {
   this->logDir = j_dir;
   bool with_jokes = settings->value("with_jokes", false).toBool();
   ui->jokesCheckbox->setChecked(with_jokes);
+  bool ask_dir = settings->value("ask_dir_for_save", true).toBool();
+  ui->askDirForSave->setChecked(ask_dir);
 }
 
 void MainWindow::loadDefaultSettings() {
@@ -99,6 +103,7 @@ void MainWindow::loadDefaultSettings() {
   ui->eventDir->setText(CURRENT_DIR);
   ui->journalDir->setText(CURRENT_DIR);
   ui->jokesCheckbox->setChecked(false);
+  ui->askDirForSave->setChecked(true);
 }
 
 void MainWindow::loadDataFromApi() {
@@ -123,7 +128,7 @@ void MainWindow::stopAllMedia() {
 }
 
 void MainWindow::checkAndPlayAllMedia() {
-  if (this->settings->value("with_jokes", true).toBool()) {
+  if (this->settings->value("with_jokes", false).toBool()) {
     this->playAllMedia();
   } else {
     this->stopAllMedia();
@@ -226,6 +231,16 @@ void MainWindow::on_teacher_activated(int _) {
 }
 
 void MainWindow::on_pushButton_clicked() {
+  if (this->settings->value("ask_dir_for_save", true).toBool()) {
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Сохранить в"),
+                                                    QDir::homePath(),
+                                                    QFileDialog::ShowDirsOnly
+                                                    | QFileDialog::DontResolveSymlinks);
+    if (dir.length() == 0) {
+      return;
+    }
+    this->calendar->setEventsDir(dir);
+  }
   this->loadingModal->show();
   int groupId = ui->group->currentData().toInt();
   int teacherId = ui->teacher->currentData().toInt();
@@ -235,7 +250,6 @@ void MainWindow::on_pushButton_clicked() {
 
   QDate nextMonday = currentMonday.addDays(7);
   QString isoNextMonday = nextMonday.toString(Qt::ISODate);
-
   if (groupId) {
     this->api->loadScheduleByGroup(groupId, isoCurrentMonday);
     this->api->loadScheduleByGroup(groupId, isoNextMonday);
@@ -265,3 +279,10 @@ void MainWindow::handle_error(QString& error) {
 void MainWindow::on_helpButton_clicked() {
   this->helpModal->exec();
 }
+
+void MainWindow::on_askDirForSave_toggled(bool checked)
+{
+  ui->eventDir->setDisabled(checked);
+  ui->chooseEventDir->setDisabled(checked);
+}
+

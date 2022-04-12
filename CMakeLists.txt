@@ -15,7 +15,6 @@ set(CMAKE_PREFIX_PATH "/usr/local/opt/qt")
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Network Multimedia REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network Multimedia REQUIRED)
 
-
 set(PROJECT_SOURCES
         src/main.cpp
         src/MainWindow/mainwindow.cpp
@@ -64,3 +63,12 @@ if(QT_VERSION_MAJOR EQUAL 6)
 endif()
 
 install(TARGETS generator DESTINATION ${INSTALL_PREFIX})
+
+#install(FILES $<TARGET_FILE:Qt${QT_VERSION_MAJOR}::Core>
+#        $<TARGET_FILE:Qt${QT_VERSION_MAJOR}::Gui>
+#        $<TARGET_FILE:Qt${QT_VERSION_MAJOR}::Widgets>
+#        $<TARGET_FILE:Qt${QT_VERSION_MAJOR}::Network>
+#        $<TARGET_FILE:Qt${QT_VERSION_MAJOR}::Multimedia>
+#        DESTINATION ./)
+#
+#install(FILES static/mainBg.gif static/settingsBg.gif static/music.mp3 DESTINATION ./)

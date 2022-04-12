@@ -118,6 +118,8 @@ private slots:
 
   void on_group_activated(int index);
 
+  void on_askDirForSave_toggled(bool value);
+
   /**
    * Обработчик загрузки данных о группах и преподавателях
    * @param jsonData
