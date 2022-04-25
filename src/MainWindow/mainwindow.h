@@ -31,7 +31,7 @@ private:
   const int FILIAL_ID = 880;
   QString BASE;
   const QString DEFAULT_API = "https://login.misis.ru/";
-  const QString CURRENT_DIR = QDir::currentPath();
+  const QString CURRENT_DIR = QCoreApplication::applicationFilePath();
   const QString DATA_FILENAME = CURRENT_DIR + "/data.json";
   const QString MAIN_BG_PATH = ":/static/mainBg.gif";
   const QString SETTINGS_BG_PATH = ":/static/settingsBg.gif";

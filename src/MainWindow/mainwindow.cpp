@@ -34,7 +34,6 @@ MainWindow::MainWindow(QWidget *parent)
   this->api = new ApiClient(BASE);
   QObject::connect(this->api, &ApiClient::dataLoaded, this, &MainWindow::handle_data_loaded);
   QObject::connect(this->api, &ApiClient::error, this, &MainWindow::handle_error);
-
   if (!this->data->exist()) {
     this->loadDataFromApi();
   } else {

@@ -12,6 +12,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_PREFIX_PATH "/usr/local/opt/qt")
 
+if (WIN32)
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+    set(CMAKE_CXX_FLAGS_DEBUG  "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+endif()
+
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Network Multimedia REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network Multimedia REQUIRED)
 
@@ -63,20 +68,3 @@ if(QT_VERSION_MAJOR EQUAL 6)
 endif()
 
 install(TARGETS generator DESTINATION ${INSTALL_PREFIX})
-
-if (WIN32)
-    get_property(QT_CORE_INCLUDE_DIRS TARGET Qt${QT_VERSION_MAJOR}::Core PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
-    list(GET QT_CORE_INCLUDE_DIRS 0 QT_CORE_MAIN_INCLUDE_DIR)
-    get_filename_component(QT_MAIN_DIR ${QT_CORE_MAIN_INCLUDE_DIR}/../.. ABSOLUTE)
-
-    install(DIRECTORY ${QT_MAIN_DIR}/plugins/platforms/
-            DESTINATION ./platforms USE_SOURCE_PERMISSIONS)
-
-    install(FILES $<TARGET_FILE:Qt${QT_VERSION_MAJOR}::Core>
-            $<TARGET_FILE:Qt${QT_VERSION_MAJOR}::Gui>
-            $<TARGET_FILE:Qt${QT_VERSION_MAJOR}::Widgets>
-            $<TARGET_FILE:Qt${QT_VERSION_MAJOR}::Network>
-            $<TARGET_FILE:Qt${QT_VERSION_MAJOR}::Multimedia>
-            DESTINATION ./)
-endif()
-#install(FILES static/mainBg.gif static/settingsBg.gif static/music.mp3 DESTINATION ./)
